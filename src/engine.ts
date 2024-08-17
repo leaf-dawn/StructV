@@ -28,13 +28,13 @@ export interface ResizeOption {
 }
 
 
-export class Engine<T extends SourceElement[], V extends EngineOption> {
+export class Engine<V extends EngineOption> {
     // 引擎id
     private id: string;
     // 引擎名称
     public name: string = 'engine';
     // 当前保存的源数据
-    private sources: T = null;
+    private sources: Sources = null;
     // 序列化的源数据
     private stringifySources: string = null;
     // 数据模型控制器
@@ -82,7 +82,7 @@ export class Engine<T extends SourceElement[], V extends EngineOption> {
     };
 
     // 代理过的源数据
-    proxySources: T = null;
+    proxySources: Sources = null;
 
     // Shape构造函数容器，用作存放扩展的Shape（基本上为Composite）
     // 使用registerShape函数注册的图形将被存放在此处，任何子Engine都可访问到这些图形（全局）
@@ -148,7 +148,7 @@ export class Engine<T extends SourceElement[], V extends EngineOption> {
      * 整个可视化引擎的更新（发生结构改变，更新整个引擎）
      * @param sources 
      */
-    private updateEngine(sources: T) {
+    private updateEngine(sources: Sources) {
         // 重置数据
         this.reset();
 
@@ -205,7 +205,7 @@ export class Engine<T extends SourceElement[], V extends EngineOption> {
      * @param sources 
      * @param proxySources
      */
-    public source(sources?: T, proxySources: boolean = false): void | T {
+    public source(sources?: Sources, proxySources: boolean = false): void | Sources {
         // 如果正在执行视图更新，则取消该次动作（避免用户频繁点击）
         if(!this.viewOption.animation.enableSkip && this.viewModel.isViewUpdating) {
             return;

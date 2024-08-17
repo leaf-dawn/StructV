@@ -7,12 +7,12 @@ import { Engine } from "../engine";
  * 源数据代理器，当某个源数据发生更改时，触发可视化更新
  */
 export class SourcesProxy {
-    private engine: Engine;
+    private engine: Engine<any>;
     private revocableObject = null;
     private updateEngineRequest: number = 0;
     private updateEngineDelayCount: number = 0;
 
-    constructor(engine: Engine) {
+    constructor(engine: Engine<any>) {
         this.engine = engine;
     }
 

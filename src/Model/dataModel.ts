@@ -28,7 +28,7 @@ export class DataModel {
     // 可以跳过布局的 element 的 id
     private skipLayoutElementIds: string[] = [];
 
-    constructor(private engine: Engine, viewModel: ViewModel) {
+    constructor(private engine: Engine<any>, viewModel: ViewModel) {
         this.engine = engine;
         this.viewModel = viewModel;
 
