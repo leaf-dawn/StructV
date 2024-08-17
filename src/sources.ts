@@ -19,7 +19,7 @@ export interface SourceElement {
 }
 
 // 源数据格式
-export type Sources = { } | SourceElement[];
+export type Sources<T extends SourceElement> = { } | T[];
 
 
 

@@ -2,7 +2,7 @@ import { ViewModel } from "./View/viewModel";
 import { Util } from "./Common/util";
 import { DataModel, ElementContainer } from "./Model/dataModel";
 import { ViewOption, EngineOption, InteractOption, StructOption, DefaultLinkOption, DefaultPointerOption } from "./option";
-import { Sources } from "./sources";
+import { Sources, SourceElement } from "./sources";
 import { Shape, Style } from "./Shapes/shape";
 import { Element } from "./Model/element";
 import { Group } from "./Model/group";
@@ -12,13 +12,12 @@ import { InteractionModel } from "./Interaction/interactionModel";
 import { Renderer } from "./View/renderer";
 
 
-
 // 注册一个可视化引擎所需的信息
-export interface EngineInfo {
+export interface EngineInfo<V extends EngineOption> {
     // 引擎名称
     name: string;
     // 默认配置项
-    defaultOption: EngineOption;
+    defaultOption: V;
 }
 
 // 进行容器尺寸调整时的配置项
@@ -29,13 +28,13 @@ export interface ResizeOption {
 }
 
 
-export class Engine {
+export class Engine<T extends SourceElement[], V extends EngineOption> {
     // 引擎id
     private id: string;
     // 引擎名称
     public name: string = 'engine';
     // 当前保存的源数据
-    private sources: Sources = null;
+    private sources: T = null;
     // 序列化的源数据
     private stringifySources: string = null;
     // 数据模型控制器
@@ -47,7 +46,7 @@ export class Engine {
     // 源数据代理器
     private sourcesProxy: SourcesProxy = null;
     // 用户的默认配置项
-    private defaultOption: EngineOption = null;
+    private defaultOption: V = null;
 
     // 结构配置项
     structOption: StructOption = {
@@ -83,13 +82,13 @@ export class Engine {
     };
 
     // 代理过的源数据
-    proxySources: Sources = null;
+    proxySources: T = null;
 
     // Shape构造函数容器，用作存放扩展的Shape（基本上为Composite）
     // 使用registerShape函数注册的图形将被存放在此处，任何子Engine都可访问到这些图形（全局）
     static ShapesTable: {[key: string]: { new(id: string, name: string, opt: any): Shape }} = {};
 
-    constructor(container: HTMLElement, engineInfo: EngineInfo) {
+    constructor(container: HTMLElement, engineInfo: EngineInfo<V>) {
         Util.assert(!container, 'HTML元素不存在');
 
         this.id = Util.generateId();
@@ -146,7 +145,7 @@ export class Engine {
      * 整个可视化引擎的更新（发生结构改变，更新整个引擎）
      * @param sources 
      */
-    private updateEngine(sources: Sources) {
+    private updateEngine(sources: T) {
         // 重置数据
         this.reset();
 
@@ -203,7 +202,7 @@ export class Engine {
      * @param sources 
      * @param proxySources
      */
-    public source(sources?: Sources, proxySources: boolean = false): void | Sources {
+    public source(sources?: T, proxySources: boolean = false): void | T {
         // 如果正在执行视图更新，则取消该次动作（避免用户频繁点击）
         if(!this.viewOption.animation.enableSkip && this.viewModel.isViewUpdating) {
             return;
@@ -329,7 +328,7 @@ export class Engine {
     /**
      * 获取默认配置项
      */
-    public getDefaultOption(): EngineOption {
+    public getDefaultOption(): V {
         return this.defaultOption;
     }
 
