@@ -119,6 +119,9 @@ export class Engine<T extends SourceElement[], V extends EngineOption> {
      * @param structOption 
      */
     private initViewOption(structOption: StructOption) {
+        if (!structOption) {
+            return
+        }
         if(structOption.element && typeof structOption.element === 'object') {
             this.viewOption.element = {};
             Object.keys(structOption.element).forEach(key => {
