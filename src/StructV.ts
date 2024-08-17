@@ -57,7 +57,7 @@ export const SV = {
      * @param engineConstruct 
      * @param opt 
      */
-    create(container: HTMLElement, engineConstruct: { new(container: HTMLElement): Engine }, opt?: Partial<EngineOption>): Engine {
+    create(container: HTMLElement, engineConstruct: { new(container: HTMLElement): Engine<any, any> }, opt?: Partial<EngineOption>): Engine<any, any> {
         engineConstruct['id'] = Util.generateId();
 
         let engine = new engineConstruct(container);
